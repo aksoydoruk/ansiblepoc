@@ -1,0 +1,14 @@
+- name: Install IIS
+  hosts: win
+  serial: 1
+  remote_user: Administrator
+  tasks:
+    - name: Create a new application pool in 'Started' state
+      win_iis_webapppool:
+        name: AppPool
+        state: started
+        attributes:
+          managedPipelineMode: Classic
+          cpu.limit: 100
+          recycling.periodicRestart.schedule: "03:00:00"
+          recycling.periodicRestart.time: 0

@@ -1,0 +1,25 @@
+- name: Install IIS
+  hosts: win
+  serial: 1
+  remote_user: Administrator
+  tasks:
+    - name: Install IIS (Web-Server and Web-Common-Http)
+      win_feature:
+        name:
+        - Web-Server
+        - Web-Common-Http
+        - Web-Http-Redirect
+        - Telnet-Client
+        state: present
+
+    - name: Install IIS Web-Server with sub features and management tools
+      win_feature:
+        name: Web-Server
+        state: present
+        include_sub_features: no
+        include_management_tools: yes
+        register: win_feature
+
+#    - name: Reboot if installing Web-Server feature requires it
+#      win_reboot:
+#      when: win_feature.reboot_required

@@ -1,0 +1,27 @@
+- name: Install IIS
+  hosts: win
+  serial: 1
+  remote_user: Administrator
+  tasks:
+    - name: Create a new application pool in 'Started' state
+      win_iis_website:
+        name: KonsaltLocal
+        state: started
+        port: 80
+        ip: 127.0.0.1
+        hostname: example.com
+        application_pool: AppPool
+        physical_path: C:\inetpub\wwwroot\konsalt
+        parameters: logfile.directory:C:\inetpub\logs\konsalt
+      register: website
+
+    - name: Add a HTTPS binding with host header and SNI enabled
+      win_iis_webbinding:
+        name: KonsaltLocal
+        protocol: https
+        port: 443
+        ip: 127.0.0.1
+        host_header: example.com
+        ssl_flags: 1
+        certificate_hash: e8f7f582031f743e6feabbf430c56c239a3839c7
+        state: present

@@ -1,0 +1,16 @@
+---
+# windows-updates.yml
+
+- hosts: win
+  serial: 1
+  remote_user: Administrator 
+
+  tasks:
+
+    # Check of there are missing updates
+      - block:
+          - name: Check for missing updates.
+            win_updates: state=searched
+            register: update_count
+          - name: List missing updates
+            debug: var=update_count
